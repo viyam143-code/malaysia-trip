@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malaysia Trip Wallet</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={theme:{extend:{colors:{og:'#f58a1f'},keyframes:{up:{'0%':{opacity:0,transform:'translateY(16px)'},'100%':{opacity:1,transform:'none'}},float:{'0%,100%':{transform:'translate(0,0) scale(1)'},'50%':{transform:'translate(20px,-30px) scale(1.12)'}},pop:{'0%':{transform:'scale(.9)',opacity:0},'100%':{transform:'scale(1)',opacity:1}},sheet:{'0%':{transform:'translateY(100%)'},'100%':{transform:'none'}},pulse2:{'0%':{boxShadow:'0 0 0 0 rgba(245,138,31,.55)'},'100%':{boxShadow:'0 0 0 18px rgba(245,138,31,0)'}}},animation:{up:'up .6s cubic-bezier(.2,.8,.2,1) both',float:'float 9s ease-in-out infinite',pop:'pop .35s ease-out both',sheet:'sheet .4s cubic-bezier(.2,.8,.2,1) both',pulse2:'pulse2 2s infinite'}}}}</script>
+<style>
+body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+.glass{background:rgba(255,255,255,.55);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.8);box-shadow:0 8px 30px rgba(80,80,110,.12)}
+@media (prefers-color-scheme:dark){.glass{background:rgba(40,42,52,.55);border-color:rgba(255,255,255,.1);box-shadow:0 8px 30px rgba(0,0,0,.35)}}
+.ring{transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+button:active{transform:scale(.95)}button{transition:transform .15s}
+</style></head>
+<body class="bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 text-slate-800 dark:text-slate-100 min-h-screen max-w-md mx-auto relative overflow-x-hidden pb-32">
+<div class="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+<div class="absolute -top-10 -right-16 w-64 h-64 rounded-full bg-slate-400/40 blur-3xl animate-float"></div>
+<div class="absolute top-1/2 -left-24 w-72 h-72 rounded-full bg-violet-300/40 blur-3xl animate-float" style="animation-delay:-3s"></div>
+<div class="absolute bottom-0 right-0 w-60 h-60 rounded-full bg-orange-300/40 blur-3xl animate-float" style="animation-delay:-6s"></div></div>
+
+<header class="flex items-center justify-between px-5 pt-5 animate-up">
+<div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full glass grid place-items-center text-xl">🌴</div>
+<div><div class="text-lg font-bold leading-tight">Malaysia Trip</div><div class="text-xs text-slate-500 dark:text-slate-400">December 2026 · 3 families</div></div></div>
+<div class="glass rounded-full px-3 py-1.5 text-xs font-semibold text-og" id="live">● Live</div></header>
+
+<main id="v-home" class="px-4 mt-5 space-y-4">
+<button id="nudge" class="hidden w-full glass rounded-3xl p-4 text-left animate-pop"><div class="font-semibold">👋 Add your family names</div><div class="text-xs text-slate-500 dark:text-slate-400">Tap here to name the 3 families</div></button>
+<section class="glass rounded-3xl p-5 animate-up" style="animation-delay:.1s">
+<div class="text-sm text-slate-500 dark:text-slate-400 mb-3">Trip wallet</div>
+<div class="flex items-center gap-5">
+<div class="relative w-32 h-32 shrink-0"><svg viewBox="0 0 120 120" class="-rotate-90"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(150,150,170,.25)" stroke-width="10"/><circle id="ring" class="ring" cx="60" cy="60" r="52" fill="none" stroke="#f58a1f" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+<div class="absolute inset-0 grid place-items-center text-center"><div><div id="pct" class="text-xl font-extrabold">0%</div><div class="text-[10px] text-slate-500 dark:text-slate-400">spent</div></div></div></div>
+<div class="flex-1 space-y-2"><div><div class="text-xs text-slate-500 dark:text-slate-400">Left in pot</div><div id="bal" class="text-3xl font-extrabold">RM 0</div></div>
+<div class="flex gap-4 text-sm"><div><span class="text-slate-500 dark:text-slate-400 text-xs block">Added</span><b id="tin" class="text-emerald-600 dark:text-emerald-400">0</b></div><div><span class="text-slate-500 dark:text-slate-400 text-xs block">Spent</span><b id="tout" class="text-og">0</b></div></div></div></div></section>
+
+<section class="glass rounded-3xl p-5 animate-up" style="animation-delay:.2s"><div class="font-semibold mb-3">Who added what</div><div id="fams" class="space-y-3"></div></section>
+<section class="animate-up" style="animation-delay:.3s"><div id="cats" class="flex gap-2 overflow-x-auto pb-1"></div></section>
+<section class="animate-up" style="animation-delay:.4s"><div class="flex justify-between items-center mb-2 px-1"><div class="font-semibold">Latest</div><button data-t="all" class="text-xs text-og font-semibold">See all</button></div><div id="recent" class="space-y-2"></div></section>
+</main>
+
+<main id="v-all" class="hidden px-4 mt-5"><div class="font-bold text-xl mb-3 px-1 animate-up">All transactions</div><div id="all" class="space-y-2"></div></main>
+
+<main id="v-fam" class="hidden px-4 mt-5"><div class="font-bold text-xl mb-1 px-1 animate-up">Families</div><div class="text-sm text-slate-500 dark:text-slate-400 mb-4 px-1">Type each family name and save.</div><div id="famform" class="space-y-3"></div>
+<button id="savefam" class="w-full mt-4 py-3.5 rounded-2xl bg-og text-white font-bold shadow-lg shadow-orange-400/40">Save names</button>
+<div id="danger" class="hidden mt-8 glass rounded-3xl p-4 border-red-300/60"><div class="font-semibold text-red-500 mb-1">Reset (owner only)</div><div class="text-xs text-slate-500 dark:text-slate-400 mb-3">This deletes data for everyone and cannot be undone.</div><div class="flex gap-2"><button id="clr" class="flex-1 py-3 rounded-2xl bg-red-500/90 text-white font-semibold text-sm">Clear history</button><button id="rst" class="flex-1 py-3 rounded-2xl border border-red-400 text-red-500 font-semibold text-sm">Reset everything</button></div></div></main>
+
+<nav class="fixed left-0 right-0 bottom-0 max-w-md mx-auto px-5 pb-[calc(16px+env(safe-area-inset-bottom,0px))] z-10">
+<div class="glass rounded-full px-3 py-2 flex items-center justify-between" id="nav">
+<button data-t="home" class="nb w-12 h-12 rounded-full grid place-items-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg></button>
+<button data-t="all" class="nb w-12 h-12 rounded-full grid place-items-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 4h14v17l-3-2-2 2-2-2-2 2-2-2-3 2z M9 9h6 M9 13h6"/></svg></button>
+<button data-t="fam" class="nb w-12 h-12 rounded-full grid place-items-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6 M17 5a3.5 3.5 0 010 7 M19 14c2 1 3 3 3 6"/></svg></button>
+<button id="fab" class="w-12 h-12 rounded-full bg-og text-white text-3xl grid place-items-center shadow-lg shadow-orange-400/50 animate-pulse2" aria-label="Add">+</button></div></nav>
+
+<div id="sheet" class="hidden fixed inset-0 z-20 bg-black/40 items-end"><div class="glass !bg-white/85 dark:!bg-slate-900/90 w-full max-w-md mx-auto rounded-t-[32px] p-5 pb-[calc(20px+env(safe-area-inset-bottom,0px))] animate-sheet">
+<div class="flex bg-slate-200/70 dark:bg-slate-700/60 rounded-2xl p-1 mb-4" id="seg"><button data-k="in" class="flex-1 py-2.5 rounded-xl font-semibold text-sm">＋ Add money</button><button data-k="out" class="flex-1 py-2.5 rounded-xl font-semibold text-sm">－ Spend</button></div>
+<input id="amt" type="number" inputmode="decimal" placeholder="Amount (RM)" class="w-full text-2xl font-bold bg-transparent border-b-2 border-og/50 focus:border-og outline-none py-2 mb-4">
+<div id="flab" class="text-xs text-slate-500 mb-2"></div><div id="fchips" class="flex flex-wrap gap-2 mb-4"></div>
+<div id="catwrap"><div class="text-xs text-slate-500 mb-2">Category</div><div id="cchips" class="flex flex-wrap gap-2 mb-4"></div></div>
+<input id="note" placeholder="Note (e.g. Nasi lemak, Grab to KLCC)" class="w-full rounded-2xl bg-slate-200/60 dark:bg-slate-700/50 px-4 py-3 outline-none">
+<button id="save" class="w-full mt-4 py-3.5 rounded-2xl bg-og text-white font-bold shadow-lg shadow-orange-400/40">Save</button></div></div>
+
+<script>
+const CATS=[["🍜","Food"],["🚕","Transport"],["🏨","Hotel"],["🛍️","Shopping"],["🎟️","Tickets"],["✨","Other"]];
+let names=["","",""],entries=[],db=null,kind="in",fam=0,cat=0,tab="home";
+const $=i=>document.getElementById(i),fmt=n=>"RM "+n.toLocaleString("en-MY",{minimumFractionDigits:0,maximumFractionDigits:2});
+const fn=i=>names[i]||"Family "+(i+1),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const chip=(on,a,t)=>`<button ${a} class="px-3.5 py-2 rounded-full text-sm font-medium ${on?"bg-og text-white shadow shadow-orange-400/40":"glass"}">${t}</button>`;
+function render(){
+ const e=[...entries].sort((a,b)=>b.ts-a.ts),tin=e.filter(x=>x.k==="in").reduce((s,x)=>s+x.amt,0),tout=e.filter(x=>x.k==="out").reduce((s,x)=>s+x.amt,0),p=tin?Math.min(100,tout/tin*100):0;
+ $("bal").textContent=fmt(tin-tout);$("tin").textContent=fmt(tin);$("tout").textContent=fmt(tout);$("pct").textContent=Math.round(p)+"%";$("ring").style.strokeDashoffset=326.7*(1-p/100);
+ $("nudge").classList.toggle("hidden",names.every(Boolean));
+ $("fams").innerHTML=names.map((_,i)=>{const s=e.filter(x=>x.k==="in"&&x.f===i).reduce((a,x)=>a+x.amt,0);return `<div><div class="flex justify-between text-sm mb-1"><span class="font-medium">${esc(fn(i))}</span><span class="text-slate-500 dark:text-slate-400">${fmt(s)}</span></div><div class="h-2 rounded-full bg-slate-300/40"><div class="h-2 rounded-full bg-og transition-all duration-1000" style="width:${tin?s/tin*100:0}%"></div></div></div>`}).join("");
+ const cs=CATS.map((c,i)=>[c,e.filter(x=>x.k==="out"&&x.c===i).reduce((a,x)=>a+x.amt,0)]).filter(x=>x[1]>0);
+ $("cats").innerHTML=cs.length?cs.map(([c,v])=>`<div class="glass rounded-2xl px-4 py-3 shrink-0 text-center animate-pop"><div class="text-xl">${c[0]}</div><div class="text-xs text-slate-500 dark:text-slate-400">${c[1]}</div><div class="font-bold text-sm">${fmt(v)}</div></div>`).join(""):"";
+ const row=(x,i)=>`<div class="glass rounded-2xl p-3 flex items-center gap-3 animate-up" style="animation-delay:${Math.min(i,8)*50}ms"><div class="w-11 h-11 rounded-xl bg-white/60 dark:bg-white/10 grid place-items-center text-xl">${x.k==="in"?"💰":CATS[x.c]?.[0]||"✨"}</div><div class="flex-1 min-w-0"><div class="font-semibold truncate">${esc(x.note||(x.k==="in"?"Money added":CATS[x.c]?.[1]||"Spent"))}</div><div class="text-xs text-slate-500 dark:text-slate-400">${esc(fn(x.f))} · ${new Date(x.ts).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</div></div><div class="font-bold ${x.k==="in"?"text-emerald-600 dark:text-emerald-400":"text-og"}">${x.k==="in"?"+":"−"}${fmt(x.amt)}</div><button data-d="${x.id}" class="text-slate-400 px-1" aria-label="Delete">✕</button></div>`;
+ const none='<div class="glass rounded-2xl p-6 text-center text-slate-500">Nothing yet — tap the orange + to start</div>';
+ $("recent").innerHTML=e.length?e.slice(0,4).map(row).join(""):none;$("all").innerHTML=e.length?e.map(row).join(""):none;
+ if(!$("famform").children.length)$("famform").innerHTML=names.map((n,i)=>`<div class="glass rounded-3xl p-4 flex items-center gap-3 animate-up" style="animation-delay:${i*80}ms"><div class="w-12 h-12 rounded-full bg-og/90 text-white grid place-items-center font-bold text-lg">${i+1}</div><input data-i="${i}" value="${esc(n)}" placeholder="Family ${i+1} name" class="fin flex-1 bg-transparent text-lg font-semibold outline-none border-b border-slate-300/60 focus:border-og py-1"></div>`).join("");
+}
+function chips(){
+ $("fchips").innerHTML=names.map((_,i)=>chip(i===fam,`data-f="${i}"`,esc(fn(i)))).join("");
+ $("cchips").innerHTML=CATS.map((c,i)=>chip(i===cat,`data-c="${i}"`,c[0]+" "+c[1])).join("");
+ $("catwrap").style.display=kind==="out"?"block":"none";$("flab").textContent=kind==="in"?"Which family is adding?":"Which family paid?";
+ document.querySelectorAll("#seg button").forEach(b=>b.className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition "+(b.dataset.k===kind?"bg-og text-white shadow":""));
+}
+function show(t){tab=t;["home","all","fam"].forEach(k=>$("v-"+k).classList.toggle("hidden",k!==t));
+ document.querySelectorAll(".nb").forEach(b=>b.className="nb w-12 h-12 rounded-full grid place-items-center transition "+(b.dataset.t===t?"bg-og text-white shadow-lg shadow-orange-400/40":"text-slate-500 dark:text-slate-300"));scrollTo({top:0})}
+document.addEventListener("click",async ev=>{
+ const t=ev.target.closest("button");if(!t)return;
+ if(t.id==="nudge")show("fam");
+ else if(t.dataset.t)show(t.dataset.t);
+ else if(t.id==="fab"){chips();$("sheet").classList.remove("hidden");$("sheet").classList.add("flex")}
+ else if(t.dataset.k){kind=t.dataset.k;chips()}
+ else if(t.dataset.f){fam=+t.dataset.f;chips()}
+ else if(t.dataset.c){cat=+t.dataset.c;chips()}
+ else if(t.id==="save"){const amt=parseFloat($("amt").value);if(!(amt>0))return $("amt").focus();
+  const id="e"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d={k:kind,amt,f:fam,c:cat,note:$("note").value.trim(),ts:Date.now()};
+  entries.push({id,...d});render();$("sheet").classList.add("hidden");$("sheet").classList.remove("flex");$("amt").value="";$("note").value="";
+  try{await db?.collection("entries").doc(id).set(d)}catch(e){}}
+ else if(t.dataset.d){if(!confirm("Delete this entry?"))return;entries=entries.filter(x=>x.id!==t.dataset.d);render();try{await db?.collection("entries").doc(t.dataset.d).delete()}catch(e){}}
+ else if(t.id==="clr"||t.id==="rst"){const all=t.id==="rst";if(!confirm(all?"Delete ALL transactions AND family names for everyone?":"Delete ALL transactions for everyone?"))return;if(!confirm("Really sure? This cannot be undone."))return;const ids=entries.map(x=>x.id);entries=[];if(all){names=["","",""];$("famform").innerHTML=""}render();try{await Promise.all(ids.map(i=>db?.collection("entries").doc(i).delete()));if(all)await db?.collection("settings").doc("main").delete()}catch(e){}}
+ else if(t.id==="savefam"){names=[...document.querySelectorAll(".fin")].map(i=>i.value.trim());$("famform").innerHTML="";render();t.textContent="Saved ✓";setTimeout(()=>t.textContent="Save names",1500);try{await db?.collection("settings").doc("main").set({names})}catch(e){}}
+});
+$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet"){$("sheet").classList.add("hidden");$("sheet").classList.remove("flex")}});
+show("home");render();
+(async()=>{try{const u=await claude.use("user");if(u&&await u.canEdit())$("danger").classList.remove("hidden")}catch(e){}})();
+(async()=>{try{const c=await claude.use("db");if(!c)return;db=c;
+ db.collection("entries").onSnapshot(s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
+ db.collection("settings").onSnapshot(s=>{const d=s.docs.find(x=>x.id==="main")?.data();if(d?.names){names=d.names;if(tab!=="fam")$("famform").innerHTML="";render()}},()=>{});
+}catch(e){}})();
+</script></body></html>
